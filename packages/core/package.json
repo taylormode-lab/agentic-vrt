@@ -1,6 +1,6 @@
 {
   "name": "@taylormode-lab/agentic-vrt-core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "description": "Core of Agentic VRT: browser tools, autonomous LLM judge agent, scenario engine, reporter, baseline.",
   "main": "./dist/index.js",

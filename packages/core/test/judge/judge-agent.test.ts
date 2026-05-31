@@ -54,6 +54,7 @@ function makeBrowser(): BrowserController {
     queryDom: vi.fn(async () => ({ found: true, text: "x", count: 1 })),
     getPageContent: vi.fn(async () => "content"),
     getPageUrl: vi.fn(async () => "http://localhost/x"),
+    clearSession: vi.fn(async () => {}),
     close: vi.fn(async () => {}),
   };
 }

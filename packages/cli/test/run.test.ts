@@ -26,6 +26,7 @@ function makeBrowser(): BrowserController {
     queryDom: vi.fn(async () => ({ found: true, text: "", count: 1 })),
     getPageContent: vi.fn(async () => ""),
     getPageUrl: vi.fn(async () => ""),
+    clearSession: vi.fn(async () => {}),
     close: vi.fn(async () => {}),
   };
 }

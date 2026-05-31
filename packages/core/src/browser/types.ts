@@ -52,5 +52,7 @@ export interface BrowserController {
   queryDom(selector: string): Promise<DomQueryResult>;
   getPageContent(): Promise<string>;
   getPageUrl(): Promise<string>;
+  /** Cookie / localStorage / sessionStorage を消去し未認証状態に戻す */
+  clearSession(): Promise<void>;
   close(): Promise<void>;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@taylormode-lab/agentic-vrt-mcp",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "description": "Local stdio MCP server entrypoint for Agentic VRT.",
   "main": "./dist/index.js",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@taylormode-lab/agentic-vrt-core": "^0.1.5",
+    "@taylormode-lab/agentic-vrt-core": "^0.1.6",
     "zod": "^4.4.3"
   },
   "repository": {

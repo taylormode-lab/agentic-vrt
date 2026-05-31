@@ -54,6 +54,10 @@ export async function runScenario(
   const baseUrl = scenario.preconditions?.baseUrl;
   const stepResults: StepResult[] = [];
 
+  if (scenario.clear_session) {
+    await deps.browser.clearSession();
+  }
+
   for (const step of scenario.steps) {
     if (step.navigate !== undefined) {
       await deps.browser.navigate(resolveUrl(baseUrl, step.navigate));

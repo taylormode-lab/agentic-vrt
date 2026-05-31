@@ -34,6 +34,8 @@ export const scenarioSchema = z.object({
   scenario: z.string().min(1),
   priority: z.enum(["critical", "high", "medium", "low"]),
   description: z.string().optional(),
+  /** true ならシナリオ開始時に Cookie/Storage を消去して未認証状態から始める */
+  clear_session: z.boolean().optional(),
   preconditions: z
     .object({ baseUrl: z.string().optional() })
     .optional(),

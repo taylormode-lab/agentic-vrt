@@ -21,6 +21,7 @@ function makeBrowser(): BrowserController {
     queryDom: vi.fn(async () => ({ found: true, text: "", count: 1 })),
     getPageContent: vi.fn(async () => ""),
     getPageUrl: vi.fn(async () => ""),
+    clearSession: vi.fn(async () => {}),
     close: vi.fn(async () => {}),
   };
 }
@@ -101,5 +102,25 @@ describe("runScenario", () => {
     expect(browser.screenshot).toHaveBeenCalledTimes(2);
     expect(browser.screenshot).toHaveBeenCalledWith({ path: "/tmp/ダッシュボード-summary.png", fullPage: true });
     expect(result.steps[0]!.screenshotPath).toBe("/tmp/ダッシュボード-summary.png");
+  });
+
+  it("clear_session:true ならステップ実行前に clearSession を呼ぶ", async () => {
+    const browser = makeBrowser();
+    const judge = makeJudge({});
+    const sc: Scenario = {
+      scenario: "アクセス制御",
+      priority: "critical",
+      clear_session: true,
+      steps: [{ id: "s", intent: "未認証確認", checkpoints: [{ element: "e", expect: "x" }] }],
+    };
+    await runScenario(sc, { browser, judge });
+    expect(browser.clearSession).toHaveBeenCalledTimes(1);
+  });
+
+  it("clear_session未指定なら clearSession を呼ばない", async () => {
+    const browser = makeBrowser();
+    const judge = makeJudge({});
+    await runScenario(scenario, { browser, judge });
+    expect(browser.clearSession).not.toHaveBeenCalled();
   });
 });

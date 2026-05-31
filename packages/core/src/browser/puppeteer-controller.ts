@@ -199,6 +199,24 @@ export class PuppeteerBrowserController implements BrowserController {
     return this.ensurePage().url();
   }
 
+  async clearSession(): Promise<void> {
+    const page = this.ensurePage();
+    const client = await page.createCDPSession();
+    await client.send("Network.clearBrowserCookies");
+    try {
+      await page.evaluate(() => {
+        try {
+          localStorage.clear();
+          sessionStorage.clear();
+        } catch {
+          /* origin may not allow storage access */
+        }
+      });
+    } catch {
+      /* about:blank 等で storage 未アクセス時は無視 */
+    }
+  }
+
   async close(): Promise<void> {
     if (this.browser) {
       await this.browser.close();
