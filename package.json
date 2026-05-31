@@ -1,0 +1,30 @@
+{
+  "name": "agentic-vrt",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Agentic Visual Regression Testing platform monorepo (core/cli/mcp).",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/cli",
+    "packages/mcp"
+  ],
+  "scripts": {
+    "build": "tsc -b packages/core packages/cli packages/mcp",
+    "clean": "tsc -b --clean packages/core packages/cli packages/mcp",
+    "typecheck": "tsc -b packages/core packages/cli packages/mcp",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint ."
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
+  }
+}

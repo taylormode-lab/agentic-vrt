@@ -1,0 +1,35 @@
+{
+  "name": "@taylormode-lab/agentic-vrt-core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Core of Agentic VRT: browser tools, autonomous LLM judge agent, scenario engine, reporter, baseline.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taylormode-lab/agentic-vrt.git",
+    "directory": "packages/core"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
+    "puppeteer-core": "^25.1.0",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  }
+}

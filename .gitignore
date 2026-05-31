@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+.DS_Store
+*.log
+
+# local secrets / env
+.env
+.env.local
+.env.*.local
+
+# test/report artifacts
+reports/
+*.png
+!packages/**/test/fixtures/**/*.png
