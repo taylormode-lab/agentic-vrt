@@ -41,6 +41,8 @@ function makeBrowser(): BrowserController {
   return {
     navigate: vi.fn(async () => {}),
     waitForSelector: vi.fn(async () => true),
+    click: vi.fn(async () => {}),
+    fill: vi.fn(async () => {}),
     scrollToText: vi.fn(async () => ({ matched: 2, strategy: "text" as const, scrolled: true })),
     scrollToSelector: vi.fn(async () => ({ matched: 1, strategy: "selector" as const, scrolled: true })),
     screenshot: vi.fn(async (o: { path: string; fullPage?: boolean }) => ({

@@ -99,6 +99,14 @@ export class PuppeteerBrowserController implements BrowserController {
     }
   }
 
+  async click(selector: string, timeoutMs = 10_000): Promise<void> {
+    await this.ensurePage().locator(selector).setTimeout(timeoutMs).click();
+  }
+
+  async fill(selector: string, value: string): Promise<void> {
+    await this.ensurePage().locator(selector).fill(value);
+  }
+
   async scrollToText(text: string): Promise<ScrollResult> {
     const page = this.ensurePage();
     const result = await page.evaluate((target: string) => {

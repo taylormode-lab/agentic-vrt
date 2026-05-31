@@ -42,6 +42,8 @@ export interface ScreenshotOptions {
 export interface BrowserController {
   navigate(url: string, opts?: { waitUntil?: "load" | "networkidle0" | "domcontentloaded" }): Promise<void>;
   waitForSelector(selector: string, timeoutMs?: number): Promise<boolean>;
+  click(selector: string, timeoutMs?: number): Promise<void>;
+  fill(selector: string, value: string): Promise<void>;
   /** テキストに一致する要素のうち、最も下にある（=見落とされやすい）ものを画面内へスクロール */
   scrollToText(text: string): Promise<ScrollResult>;
   scrollToSelector(selector: string): Promise<ScrollResult>;
