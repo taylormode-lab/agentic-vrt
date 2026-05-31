@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>offscreen-chart fixture</title>
+    <style>
+      body { margin: 0; font-family: sans-serif; }
+      .card { padding: 24px; }
+      .label { font-size: 12px; color: #666; }
+      .spacer { height: 2000px; background: #fafafa; }
+      .chart { height: 320px; background: linear-gradient(#cde, #9bd); }
+    </style>
+  </head>
+  <body>
+    <!-- 上部 KPI カード: ここに "MRR" ラベルがある（曖昧一致の元） -->
+    <section class="card">
+      <div class="label">MRR</div>
+      <div class="value">¥193,334</div>
+    </section>
+    <!-- 画面外に押し出すスペーサー -->
+    <div class="spacer">途中のコンテンツ</div>
+    <!-- 下部: 本命の MRR 推移チャート（初期表示では画面外） -->
+    <section class="card">
+      <h3>MRR推移</h3>
+      <div class="chart" id="mrr-chart"></div>
+    </section>
+  </body>
+</html>

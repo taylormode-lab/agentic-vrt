@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>delayed-load fixture</title>
+  </head>
+  <body>
+    <div id="loading">読み込み中...</div>
+    <script>
+      // 一般的な Web システムの初期描画遅延を模擬（800ms 後に本体が出る）
+      setTimeout(function () {
+        var el = document.createElement("div");
+        el.id = "late";
+        el.textContent = "遅延ロード完了";
+        document.body.appendChild(el);
+      }, 800);
+    </script>
+  </body>
+</html>
