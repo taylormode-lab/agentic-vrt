@@ -26,3 +26,7 @@ npm run typecheck
 ```
 
 詳細な開発規約は [AGENTS.md](./AGENTS.md) を参照。
+
+## License
+
+Apache License 2.0. 詳細は [LICENSE](./LICENSE) を参照（OSS / 公開パッケージ）。
