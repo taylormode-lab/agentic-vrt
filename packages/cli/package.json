@@ -1,6 +1,6 @@
 {
   "name": "@taylormode-lab/agentic-vrt-cli",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "description": "CLI entrypoint for Agentic VRT (pre-push / CI).",
   "main": "./dist/index.js",
@@ -23,10 +23,7 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "@taylormode-lab/agentic-vrt-core": "^0.1.3"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "@taylormode-lab/agentic-vrt-core": "^0.1.4"
   },
   "repository": {
     "type": "git",

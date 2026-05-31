@@ -9,7 +9,8 @@ permissions:
   packages: write
 
 jobs:
-  publish:
+  publish-ghpr:
+    name: Publish to GitHub Packages
     runs-on: ubuntu-latest
     env:
       GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -20,12 +21,33 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run build
-      - run: npm publish --workspace packages/core
+      # リポジトリの .npmrc が @taylormode-lab を GitHub Packages に向けている
+      - run: npm publish --workspace packages/core --access public
+      - run: npm publish --workspace packages/cli --access public
+      - run: npm publish --workspace packages/mcp --access public
+
+  publish-npmjs:
+    name: Publish to npmjs.com (OSS mirror)
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      # workspace 解決後、@taylormode-lab を npmjs.com へ向け直す（publishConfig は未設定）
+      - name: Point @taylormode-lab scope to npmjs
+        run: |
+          printf '@taylormode-lab:registry=https://registry.npmjs.org\n//registry.npmjs.org/:_authToken=${NPM_TOKEN}\n' > .npmrc
+      - run: npm publish --workspace packages/core --access public
         env:
-          GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm publish --workspace packages/cli
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --workspace packages/cli --access public
         env:
-          GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm publish --workspace packages/mcp
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --workspace packages/mcp --access public
         env:
-          GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
