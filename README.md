@@ -4,6 +4,16 @@ Agentic Visual Regression Testing platform.
 
 従来の VRT は「ツールを持たない単発の画像分類 LLM + ビューポート固定スナップショット + scroll/wait/判定文言のハードコード」という静的設計で、当て損なうと flaky になっていた。本基盤は判定 LLM に**ブラウザ操作ツール**を与え、人間のように「見えなければ自分でスクロール / ロード中なら待って再撮影 / それでも無ければコンソール・サーバーログを確認」してから根拠付きで合否を出す**自律エージェント**へ作り替える。
 
+## インストール（OSS / npmjs.com）
+
+公開済み（Apache-2.0）。npmjs.com から認証不要で取得できる。
+
+```bash
+npm i -D @taylormode-lab/agentic-vrt-cli @taylormode-lab/agentic-vrt-mcp
+```
+
+GitHub Packages 版も併設（`@taylormode-lab` を `https://npm.pkg.github.com` に向け、GitHub トークンで取得）。
+
 ## packages
 
 - `@taylormode-lab/agentic-vrt-core` — ブラウザ操作ツール群 + 自律判定エージェント + シナリオ実行エンジン + reporter + baseline。品質の単一情報源（バージョン固定で全リポ統一）。
