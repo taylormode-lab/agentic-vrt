@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@taylormode-lab/agentic-vrt-core": "0.1.0"
+    "@taylormode-lab/agentic-vrt-core": "0.1.0",
+    "zod": "^4.4.3"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
