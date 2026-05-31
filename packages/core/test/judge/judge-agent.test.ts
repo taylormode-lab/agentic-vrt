@@ -144,20 +144,55 @@ describe("JudgeAgent", () => {
     expect(out.find((r) => r.element === "B")!.judgment).toBe("warning");
   });
 
-  it("submitに至らない場合は最大反復で打ち切りwarningを返す（無限ループ防止）", async () => {
+  it("最大反復に達したら最終強制サブミットで判定を確定する（無限ループ防止）", async () => {
     const llm = new ScriptedLlm([
       res([toolUse("scroll_to_text", { text: "x" }, "1")]),
       res([toolUse("scroll_to_text", { text: "x" }, "2")]),
       res([toolUse("scroll_to_text", { text: "x" }, "3")]),
+      // 強制サブミット要求への応答
+      res([submit([{ element: "MRR推移チャート", judgment: "fail", reason: "探索後も未描画" }])]),
     ]);
     const browser = makeBrowser();
     const agent = new JudgeAgent({ llm, browser, config: { ...baseConfig, maxIterations: 3 } });
 
     const out = await agent.judge({ intent: "確認", checkpoints });
-    expect(out[0]!.judgment).toBe("warning");
-    expect(out[0]!.reason).toContain("最大反復");
+    expect(out[0]!.judgment).toBe("fail");
     expect(browser.scrollToText).toHaveBeenCalledTimes(3);
-    expect(llm.calls).toHaveLength(3);
+    expect(llm.calls).toHaveLength(4); // 3反復 + 強制サブミット
+  });
+
+  it("最終強制サブミットでも提出が無ければwarning", async () => {
+    const llm = new ScriptedLlm([
+      res([toolUse("scroll_to_text", { text: "x" }, "1")]),
+      res([{ type: "text", text: "わかりません" }]),
+    ]);
+    const browser = makeBrowser();
+    const agent = new JudgeAgent({ llm, browser, config: { ...baseConfig, maxIterations: 1 } });
+
+    const out = await agent.judge({ intent: "確認", checkpoints });
+    expect(out[0]!.judgment).toBe("warning");
+    expect(llm.calls).toHaveLength(2); // 1反復 + 強制サブミット試行
+  });
+
+  it("LLMが要素名を言い換えても順序（位置）で判定を対応づける", async () => {
+    const multi: Checkpoint[] = [
+      { element: "収益KPIカード", expect: "KPIが見える" },
+      { element: "MRR推移チャート", expect: "折れ線が見える" },
+    ];
+    const llm = new ScriptedLlm([
+      res([
+        submit([
+          { element: "KPIカード群", judgment: "pass", reason: "順序1" }, // 名前違いだが1番目
+          { element: "MRRの推移グラフ", judgment: "fail", reason: "順序2" }, // 名前違いだが2番目
+        ]),
+      ]),
+    ]);
+    const browser = makeBrowser();
+    const agent = new JudgeAgent({ llm, browser, config: baseConfig });
+
+    const out = await agent.judge({ intent: "確認", checkpoints: multi });
+    expect(out.find((r) => r.element === "収益KPIカード")!.judgment).toBe("pass");
+    expect(out.find((r) => r.element === "MRR推移チャート")!.judgment).toBe("fail");
   });
 
   it("initialScreenshotBase64を渡せば初期スクショを撮らない", async () => {

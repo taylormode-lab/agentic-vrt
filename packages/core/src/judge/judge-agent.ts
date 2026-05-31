@@ -95,9 +95,11 @@ function parseSubmission(
   if (!parsed.success) {
     return fallbackResults(checkpoints, `submit_judgment の形式不正: ${parsed.error.message}`);
   }
-  const byElement = new Map(parsed.data.checkpoints.map((c) => [c.element, c]));
-  return checkpoints.map((c) => {
-    const found = byElement.get(c.element);
+  const submitted = parsed.data.checkpoints;
+  const byElement = new Map(submitted.map((c) => [c.element, c]));
+  return checkpoints.map((c, i) => {
+    // 名前一致を優先し、LLM が要素名を言い換えた場合は順序（位置）でフォールバックする
+    const found = byElement.get(c.element) ?? submitted[i];
     if (found) {
       return { element: c.element, expect: c.expect, judgment: found.judgment, reason: found.reason };
     }
@@ -125,7 +127,7 @@ export class JudgeAgent {
   }
 
   async judge(input: JudgeInput): Promise<CheckpointResult[]> {
-    const maxIterations = this.config.maxIterations ?? 8;
+    const maxIterations = this.config.maxIterations ?? 10;
     const toolCtx: ToolContext = {
       browser: this.browser,
       screenshotPath: this.config.screenshotPath,
@@ -183,9 +185,31 @@ export class JudgeAgent {
       messages.push({ role: "user", content: resultBlocks });
     }
 
+    // 最大反復に達した場合: ツール探索を打ち切り、今ある情報で必ず判定させる強制サブミット
+    messages.push({
+      role: "user",
+      content: [
+        {
+          type: "text",
+          text: "これ以上ツールは使えません。今まで観察した情報だけで、必ず submit_judgment を1回呼び、全チェックポイントを pass/fail/warning で判定してください。",
+        },
+      ],
+    });
+    const finalRes = await this.llm.createMessage({
+      system: SYSTEM_PROMPT,
+      tools: JUDGE_TOOL_DEFS,
+      messages,
+    });
+    const finalSubmit = finalRes.content.find(
+      (b): b is LlmToolUseBlock => b.type === "tool_use" && b.name === SUBMIT_JUDGMENT_TOOL,
+    );
+    if (finalSubmit) {
+      return parseSubmission(finalSubmit.input, input.checkpoints);
+    }
+
     return fallbackResults(
       input.checkpoints,
-      `最大反復(${maxIterations})に達したが判定が確定しなかった`,
+      `最大反復(${maxIterations})後も submit_judgment が得られなかった`,
     );
   }
 }
